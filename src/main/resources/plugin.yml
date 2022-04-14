@@ -1,0 +1,7 @@
+name: MBedwars_SpawnerRates
+version: '${project.version}'
+main: me.crypticzxi.mbedwars_spawnerrates.me.crypticzxi.mbedwars_spawnerrates.Me.crypticzxi.MBedwars_SpawnerRates
+api-version: 1.17
+authors: [ CrypticzXI ]
+description: Just allows diffrent gamemodes to have diffrent spawn rates init
+depend: [ MBedwars ]
