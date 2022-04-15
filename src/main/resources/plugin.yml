@@ -1,4 +1,4 @@
-name: MBedwars_SpawnerRates
+name: Me.crypticzxi.MBedwars_SpawnerRates
 version: '${project.version}'
 main: me.crypticzxi.mbedwars_spawnerrates.me.crypticzxi.mbedwars_spawnerrates.Me.crypticzxi.MBedwars_SpawnerRates
 api-version: 1.17

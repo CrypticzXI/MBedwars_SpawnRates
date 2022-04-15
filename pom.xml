@@ -9,7 +9,7 @@
     <version>2.0</version>
     <packaging>jar</packaging>
 
-    <name>Me.crypticzxi.MBedwars_SpawnerRates</name>
+    <name>MBedwars_SpawnerRates</name>
 
     <description>Just allows diffrent gamemodes to have diffrent spawn rates init</description>
     <properties>
@@ -21,9 +21,6 @@
         <plugins>
             <plugin>
                 <configuration>
-                    <compilerArguments>
-                        <d>${project.build.directory}/myclasses</d>
-                    </compilerArguments>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                 </configuration>

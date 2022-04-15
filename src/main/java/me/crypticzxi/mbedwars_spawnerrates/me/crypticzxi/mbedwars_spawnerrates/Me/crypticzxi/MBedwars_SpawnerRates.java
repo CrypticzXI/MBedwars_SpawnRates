@@ -1,6 +1,7 @@
 package me.crypticzxi.mbedwars_spawnerrates.me.crypticzxi.mbedwars_spawnerrates.Me.crypticzxi;
 
 import de.marcely.bedwars.api.arena.Arena;
+import de.marcely.bedwars.api.arena.Team;
 import de.marcely.bedwars.api.event.arena.RoundStartEvent;
 import de.marcely.bedwars.api.game.spawner.Spawner;
 import de.marcely.bedwars.api.game.spawner.SpawnerDurationModifier;
@@ -10,10 +11,10 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.List;
+import java.util.*;
+import java.util.function.Supplier;
 
 public final class MBedwars_SpawnerRates extends JavaPlugin {
 
@@ -46,24 +47,65 @@ public final class MBedwars_SpawnerRates extends JavaPlugin {
             List<String> lobby_message = config.getStringList("bedwars-start-message.lines");
 
             for (String message : lobby_message) {
-                sendCenteredMessage(message);
+                sendCenteredMessage(message, event.getArena().getPlayers());
             }
 
+
+            int PPT = event.getArena().getPlayersPerTeam();
+            int teams = event.getArena().getEnabledTeams().size();
+
+
             Arena arena = event.getArena();
-            int playersPerTeam = arena.getPlayersPerTeam();
-            double modifier = playersPerTeam/4D + .75D; // solo=1, wingman=1.15, duos=1.25, trios=1.5, quads=1.75
-            for (Spawner spawner : arena.getSpawners()) {
-                spawner.addDropDurationModifier("my_custom_speed", plugin, SpawnerDurationModifier.Operation.MULTIPLY, modifier);
+
+            if(PPT == 4) {
+                double modifier = PPT/4D + .75D; // solo=1, wingman=1.15, duos=1.25, trios=1.5, quads=1.75
+                for (Spawner spawner : arena.getSpawners()) {
+                    spawner.addDropDurationModifier("Quads-Speed", plugin, SpawnerDurationModifier.Operation.MULTIPLY, modifier);
+                }
             }
+            else if (PPT == 3) {
+                double modifier = PPT/4D + .75D; // solo=1, wingman=1.15, duos=1.25, trios=1.5, quads=1.75
+                for (Spawner spawner : arena.getSpawners()) {
+                    spawner.addDropDurationModifier("Trios-Speed", plugin, SpawnerDurationModifier.Operation.MULTIPLY, modifier);
+                }
+            }
+            else if (PPT == 1) {
+                double modifier = PPT/4D + .75D; // solo=1, wingman=1.15, duos=1.25, trios=1.5, quads=1.75
+                for (Spawner spawner : arena.getSpawners()) {
+                    spawner.addDropDurationModifier("Solos-Speed", plugin, SpawnerDurationModifier.Operation.MULTIPLY, modifier);
+                }
+            }
+            else if (PPT == 2 & teams == 2) {
+                double modifier = PPT/4D + .75D; // solo=1, wingman=1.15, duos=1.25, trios=1.5, quads=1.75
+                for (Spawner spawner : arena.getSpawners()) {
+                    spawner.addDropDurationModifier("Wingman-Speed", plugin, SpawnerDurationModifier.Operation.MULTIPLY, modifier);
+                }
+            }
+
+            else if (PPT == 2 & teams > 2) {
+                double modifier = PPT/4D + .75D; // solo=1, wingman=1.15, duos=1.25, trios=1.5, quads=1.75
+                for (Spawner spawner : arena.getSpawners()) {
+                    spawner.addDropDurationModifier("Duos-Speed", plugin, SpawnerDurationModifier.Operation.MULTIPLY, modifier);
+                }
+            }
+
+
+
             Bukkit.getLogger().info("Yh man");
         }
 
     }
 
+    public class SpawnRate {
+        public String name;
+        public double gamemode; // what is that
+        public double spawnrate;
+    }
+
 
     private final static int CENTER_PX = 154;
 
-    public static void sendCenteredMessage(String message) {
+    public static void sendCenteredMessage(String message, Collection<Player> players) {
         message = ChatColor.translateAlternateColorCodes('&', message);
 
         int messagePxSize = 0;
@@ -96,7 +138,7 @@ public final class MBedwars_SpawnerRates extends JavaPlugin {
             sb.append(" ");
             compensated += spaceLength;
         }
-        for (Player user : Bukkit.getOnlinePlayers()) {
+        for (Player user : players) {
             user.sendMessage(sb.toString() + message);
         }
     }

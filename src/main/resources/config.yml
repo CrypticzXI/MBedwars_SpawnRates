@@ -14,33 +14,39 @@ bedwars-start-message:
     - "&f"
     - "&f"
     - "&c&lBed&f&lWars"
+    - "&f"
     - "&fProtect your bed and destroy the enemy beds"
     - "&fCollect Iron, Gold, Diamond and Emeralds"
     - "&fPurchase items and upgrades from dealers"
     - "Be the last team standing to win"
-
+    - "&f"
+    - "&f"
+    - "&f"
 # Edit Spawn Values
 
+
+# Wingman must be called
+# name: "Wingman-Speed"
 spawner-rates:
-  solos:
+  -
     name: "Solos-Speed"
-    gamemode: 1 # solo=1, wingman=1.15, duos=1.25, trios=1.5, quads=1.75
+    playersPerTeam: 1
     spawn-rate: 0.75
-  duos:
+  -
     name: "Duos-Speed"
-    gamemode: 1.25 # solo=1, wingman=1.15, duos=1.25, trios=1.5, quads=1.75
+    playersPerTeam: 1
     spawn-rate: 1
-  trios:
+  -
     name: "Trios-Speed"
-    gamemode: 1.5 # solo=1, wingman=1.15, duos=1.25, trios=1.5, quads=1.75
+    playersPerTeam: 1
     spawn-rate: 1.25
-  quads:
+  -
     name: "Quads-Speed"
-    gamemode: 1.75 # solo=1, wingman=1.15, duos=1.25, trios=1.5, quads=1.75
+    playersPerTeam: 1
     spawn-rate: 1.5
-  wingman:
+  -
     name: "Wingman-Speed"
-    gamemode: 1.15 # solo=1, wingman=1.15, duos=1.25, trios=1.5, quads=1.75
+    playersPerTeam: 2
     spawn-rate: 1.5
 
 
