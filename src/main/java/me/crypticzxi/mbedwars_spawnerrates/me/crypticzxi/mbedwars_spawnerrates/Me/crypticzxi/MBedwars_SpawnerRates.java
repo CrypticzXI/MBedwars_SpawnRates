@@ -7,6 +7,7 @@ import de.marcely.bedwars.api.game.spawner.Spawner;
 import de.marcely.bedwars.api.game.spawner.SpawnerDurationModifier;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -54,46 +55,38 @@ public final class MBedwars_SpawnerRates extends JavaPlugin {
             int PPT = event.getArena().getPlayersPerTeam();
             int teams = event.getArena().getEnabledTeams().size();
 
+            ConfigurationSection speedRates = getConfig().getConfigurationSection( "spawner-rates");
+            Set<String> speedRateKeys = speedRates.getKeys( false );
 
             Arena arena = event.getArena();
 
-            if(PPT == 4) {
-                double modifier = PPT/4D + .75D; // solo=1, wingman=1.15, duos=1.25, trios=1.5, quads=1.75
-                for (Spawner spawner : arena.getSpawners()) {
-                    spawner.addDropDurationModifier("Quads-Speed", plugin, SpawnerDurationModifier.Operation.MULTIPLY, modifier);
+            String final_name = "none";
+            double final_rate = 0;
+
+            for (String speedRateKey : speedRateKeys) {
+                ConfigurationSection speedRate = speedRates.getConfigurationSection(speedRateKey);
+                String name = speedRate.getString( "name" );
+                double rate = speedRate.getDouble( "spawn-rate" );
+                int PlayersPerTeam = speedRate.getInt( "playersPerTeam" );
+
+                if (speedRate.contains("NoOfTeams")) { // is a special Gamemode.
+                    int NoOfTeams = speedRate.getInt("NoOfTeams");
+                    if (PPT == PlayersPerTeam & NoOfTeams == teams) {
+                        final_name = name;
+                        final_rate = rate;
+                    }
                 }
-            }
-            else if (PPT == 3) {
-                double modifier = PPT/4D + .75D; // solo=1, wingman=1.15, duos=1.25, trios=1.5, quads=1.75
-                for (Spawner spawner : arena.getSpawners()) {
-                    spawner.addDropDurationModifier("Trios-Speed", plugin, SpawnerDurationModifier.Operation.MULTIPLY, modifier);
-                }
-            }
-            else if (PPT == 1) {
-                double modifier = PPT/4D + .75D; // solo=1, wingman=1.15, duos=1.25, trios=1.5, quads=1.75
-                for (Spawner spawner : arena.getSpawners()) {
-                    spawner.addDropDurationModifier("Solos-Speed", plugin, SpawnerDurationModifier.Operation.MULTIPLY, modifier);
-                }
-            }
-            else if (PPT == 2 & teams == 2) {
-                double modifier = PPT/4D + .75D; // solo=1, wingman=1.15, duos=1.25, trios=1.5, quads=1.75
-                for (Spawner spawner : arena.getSpawners()) {
-                    spawner.addDropDurationModifier("Wingman-Speed", plugin, SpawnerDurationModifier.Operation.MULTIPLY, modifier);
+                else if (PPT == PlayersPerTeam) {
+                    final_name = name;
+                    final_rate = rate;
                 }
             }
 
-            else if (PPT == 2 & teams > 2) {
-                double modifier = PPT/4D + .75D; // solo=1, wingman=1.15, duos=1.25, trios=1.5, quads=1.75
-                for (Spawner spawner : arena.getSpawners()) {
-                    spawner.addDropDurationModifier("Duos-Speed", plugin, SpawnerDurationModifier.Operation.MULTIPLY, modifier);
-                }
+            double modifier = PPT/4D + final_rate; // solo=1, wingman=1.15, duos=1.25, trios=1.5, quads=1.75
+            for (Spawner spawner : arena.getSpawners()) {
+                spawner.addDropDurationModifier(final_name, plugin, SpawnerDurationModifier.Operation.MULTIPLY, modifier);
             }
-
-
-
-            Bukkit.getLogger().info("Yh man");
         }
-
     }
 
     public class SpawnRate {
