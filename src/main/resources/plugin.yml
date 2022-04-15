@@ -1,7 +1,12 @@
-name: Me.crypticzxi.MBedwars_SpawnerRates
+name: MBedwars_SpawnerRates
 version: '${project.version}'
 main: me.crypticzxi.mbedwars_spawnerrates.me.crypticzxi.mbedwars_spawnerrates.Me.crypticzxi.MBedwars_SpawnerRates
 api-version: 1.17
 authors: [ CrypticzXI ]
 description: Just allows diffrent gamemodes to have diffrent spawn rates init
-depend: [ MBedwars ]
+depend: [ MBedwars, SlimeWorldManager ]
+commands:
+  spawnerrates:
+    description: Reload the plugin init
+    usage: /spawnerrates
+    permission: spawnerrates.admin
