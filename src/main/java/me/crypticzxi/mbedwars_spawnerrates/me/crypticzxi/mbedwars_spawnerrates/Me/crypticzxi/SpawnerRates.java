@@ -10,7 +10,7 @@ import org.bukkit.event.Listener;
 
 import java.util.Set;
 
-public class spawnerRates implements Listener {
+public class SpawnerRates implements Listener {
 
     @EventHandler
     public void onRoundStartEvent(RoundStartEvent event) {

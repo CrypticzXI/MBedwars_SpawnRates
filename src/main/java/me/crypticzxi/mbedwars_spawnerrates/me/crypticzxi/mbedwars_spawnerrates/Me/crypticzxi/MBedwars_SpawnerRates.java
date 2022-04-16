@@ -18,8 +18,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import me.crypticzxi.mbedwars_spawnerrates.me.crypticzxi.mbedwars_spawnerrates.Me.crypticzxi.roundStartMessage;
-import me.crypticzxi.mbedwars_spawnerrates.me.crypticzxi.mbedwars_spawnerrates.Me.crypticzxi.cloneArena;
+import me.crypticzxi.mbedwars_spawnerrates.me.crypticzxi.mbedwars_spawnerrates.Me.crypticzxi.RoundStartMessage;
+import me.crypticzxi.mbedwars_spawnerrates.me.crypticzxi.mbedwars_spawnerrates.Me.crypticzxi.CloneArena;
 
 import java.io.File;
 import java.util.*;
@@ -32,9 +32,9 @@ public final class MBedwars_SpawnerRates extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         Bukkit.getLogger().severe("Shitty Spawn Rates Plugin Has Loaded.");
-        getServer().getPluginManager().registerEvents(new roundStartMessage(), this);
-        getServer().getPluginManager().registerEvents(new spawnerRates(), this);
-        getServer().getPluginManager().registerEvents(new cloneArena(), this);
+        getServer().getPluginManager().registerEvents(new RoundStartMessage(), this);
+        getServer().getPluginManager().registerEvents(new SpawnerRates(), this);
+        getServer().getPluginManager().registerEvents(new CloneArena(), this);
         this.getCommand("spawnerrates").setExecutor(new ReloadCommand());
         plugin = this;
         saveConfig();

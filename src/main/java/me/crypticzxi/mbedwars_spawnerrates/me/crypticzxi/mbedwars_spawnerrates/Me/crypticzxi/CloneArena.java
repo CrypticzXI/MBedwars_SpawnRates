@@ -33,7 +33,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-public class cloneArena implements Listener {
+public class CloneArena implements Listener {
 
     @EventHandler
     public void onRoundStartEvent(RoundStartEvent event) {
