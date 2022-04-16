@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
 
+import com.grinderwolf.swm.api.exceptions.UnknownWorldException;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -138,7 +139,7 @@ public class CloneArena implements Listener {
                 newArena.addAuthors(Arrays.asList(arena.getAuthors()));
                 newArena.setMinPlayers(arena.getMinPlayers());
                 newArena.setPlayersPerTeam(arena.getPlayersPerTeam());
-                // new_arena.setIcon(arena.getIcon());
+                newArena.setIcon(arena.getIcon());
                 newArena.setLobbyLocation(arena.getLobbyLocation());
                 arena.getEnabledTeams().forEach(t -> {
                     newArena.setTeamEnabled(t, true);
@@ -196,42 +197,42 @@ public class CloneArena implements Listener {
         String[] parts = name.split("-");
         Integer num = Helper.get().parseInt(parts[parts.length - 1]); // Gets the Number of Arena. Pokemon-Solos-<1>
 
+        arena.remove();
+        Bukkit.getLogger().info("Removed Arena.");
 
-        if (num != null && num != 1) {
+        SlimePlugin slimeAPI = (SlimePlugin) Bukkit.getPluginManager().getPlugin("SlimeWorldManager");
 
-            arena.remove();
-            Bukkit.getLogger().info("Removed Arena.");
+        File newSlime = new File("slime_worlds/" + arena.getName() + ".slime");
 
-            World slime = arena.getGameWorld();
-            Bukkit.getLogger().info("Got the Slimeworld.");
+        SlimeWorld slimeWorld = null;
 
-            Bukkit.unloadWorld(slime, false);
-            Bukkit.getLogger().info("Unloaded Slimeworld.");
-
-            File slimeWorld = new File("slime_worlds/" + name + ".slime");
-            Bukkit.getLogger().info("Get the slimeworld file.");
-
-
-            if ( slimeWorld.exists() ) {
-            	
-            	slimeWorld.delete();
-
-            	Bukkit.getLogger().info(
-            			String.format(
-            					"onRoundEndEvent: slimeWorld deleted: %s", 
-            					slimeWorld.getAbsoluteFile() ));
-            }
-            else {
-            	Bukkit.getLogger().severe(
-            			String.format(
-            					"Error onRoundEndEvent: slimeWorld cannot be deleted since it not exist: %s", 
-            					slimeWorld.getAbsoluteFile() ));
-            }
-
+        try {
+            slimeWorld = slimeAPI.loadWorld(
+                    slimeAPI.getLoader("file"),
+                    newSlime.getName().replace(".slime", ""),
+                    true,
+                    new SlimePropertyMap());
+            Bukkit.getLogger().info("Loaded Slimeworld.");
+        } catch (Exception e) {
+            Bukkit.getLogger().severe(
+                    String.format(
+                            "Error onRoundStartEvent: Slime world load failure. " +
+                                    "Slime world: %s  Error: [%s]",
+                            newSlime.getAbsoluteFile(),
+                            e.getMessage() ));
+            e.printStackTrace();
         }
-        else {
-            Bukkit.getLogger().info("Cannot delete arena, Its the main Arena.");
+
+        try {
+            slimeWorld.getLoader().deleteWorld("file");
+            Bukkit.getLogger().info("Slimeworld Deleted.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Bukkit.getLogger().info("Slimeworld Failed to Delete.");
         }
+
+
+
 
     }
 
