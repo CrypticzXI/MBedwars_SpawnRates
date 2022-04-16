@@ -22,6 +22,7 @@ import de.marcely.bedwars.api.arena.ArenaStatus;
 import de.marcely.bedwars.api.arena.RegenerationType;
 import de.marcely.bedwars.api.event.arena.RoundEndEvent;
 import de.marcely.bedwars.api.event.arena.RoundStartEvent;
+import de.marcely.bedwars.api.event.arena.ArenaIssuesCheckEvent.Issue;
 import de.marcely.bedwars.api.exception.ArenaBuildException;
 import de.marcely.bedwars.api.game.spawner.Spawner;
 import de.marcely.bedwars.api.world.WorldStorage;
@@ -55,11 +56,40 @@ public class CloneArena implements Listener {
             File oldSlime = new File("plugins/MBedwars/data/arenablocks/" + arena.getName() + ".slime");
             File newSlime = new File("slime_worlds/" + newName + ".slime");
 
-            Bukkit.getLogger().info("copied files from arenablocks to SlimeWorldManager.");
-
+            // Create directories if they do not exist:
+            oldSlime.mkdirs();
+            newSlime.mkdirs();
+            
+            if ( !oldSlime.exists() ) {
+            	Bukkit.getLogger().severe(
+            			String.format(
+            					"Error onRoundStartEvent: Slime world source does not exist: %s", 
+            					oldSlime.getAbsoluteFile() ));
+            	return;
+            }
+            
+            if ( newSlime.exists() ) {
+            	Bukkit.getLogger().severe(
+            			String.format(
+            					"Error onRoundStartEvent: Slime world destination already exists "
+            					+ "and will be replaced: %s", 
+            					newSlime.getAbsoluteFile() ));
+            }
+            
+            
             try {
                 Files.copy(oldSlime.toPath(), newSlime.toPath());
+                
+                Bukkit.getLogger().info("copied files from arenablocks to SlimeWorldManager.");
             } catch (IOException e) {
+            	Bukkit.getLogger().severe(
+            			String.format(
+            					"Error onRoundStartEvent: Slime world copy failure. " +
+            					"Source: %s Target: %s  Error: [%s]",
+            							oldSlime.getAbsoluteFile(),
+            							newSlime.getAbsoluteFile(),
+            							e.getMessage() ));
+
                 e.printStackTrace();
             }
 
@@ -74,8 +104,13 @@ public class CloneArena implements Listener {
                         new SlimePropertyMap());
                 Bukkit.getLogger().info("Loaded Slimeworld.");
             } catch (Exception e) {
+            	Bukkit.getLogger().severe(
+            			String.format(
+            					"Error onRoundStartEvent: Slime world load failure. " +
+            							"Slime world: %s  Error: [%s]",
+            							newSlime.getAbsoluteFile(),
+            							e.getMessage() ));
                 e.printStackTrace();
-                Bukkit.getLogger().severe("COULD NOT LOAD SLIMEWORLD");
             }
 
             // generate it
@@ -123,7 +158,22 @@ public class CloneArena implements Listener {
                 Bukkit.getLogger().info("Set Spawner Locations.");
 
                 if (!newArena.getIssues().isEmpty()) {
-                    Bukkit.getLogger().severe("We didnt set everything on NewArena.");
+                	
+                	Bukkit.getLogger().severe(
+                			String.format(
+                					"Error onRoundStartEvent: Slime world cloning failure. " +
+                							"New Arena: %s",
+                							newArena.getName() ));
+                	
+                	for (Issue issue : newArena.getIssues() ) {
+                		Bukkit.getLogger().severe(
+                				String.format(
+                						"Error onRoundStartEvent: Issue Type: %s Detail: %s.",
+                								issue.getType(),
+                								issue.getDetail() ));
+                                                                                   		
+					}
+                	
                     return; // we didn't set everything
                 }
 
@@ -133,8 +183,8 @@ public class CloneArena implements Listener {
                 Bukkit.getLogger().info("Saved Arena.");
 
             } catch (ArenaBuildException arenaBuildException) {
+            	Bukkit.getLogger().severe("Error onRoundStartEvent: Something went extremely wrong.");
                 arenaBuildException.printStackTrace();
-                Bukkit.getLogger().severe("Something went extremely wrong.");
             }
 
         }
@@ -162,11 +212,25 @@ public class CloneArena implements Listener {
             Bukkit.unloadWorld(slime, false);
             Bukkit.getLogger().info("Unloaded Slimeworld.");
 
-            File slime_world = new File("slime_worlds/" + name + ".slime");
+            File slimeWorld = new File("slime_worlds/" + name + ".slime");
             Bukkit.getLogger().info("Get the slimeworld file.");
 
-            slime_world.delete();
-            Bukkit.getLogger().info("Deleted Slimeworld File.");
+
+            if ( slimeWorld.exists() ) {
+            	
+            	slimeWorld.delete();
+
+            	Bukkit.getLogger().info(
+            			String.format(
+            					"onRoundEndEvent: slimeWorld deleted: %s", 
+            					slimeWorld.getAbsoluteFile() ));
+            }
+            else {
+            	Bukkit.getLogger().severe(
+            			String.format(
+            					"Error onRoundEndEvent: slimeWorld cannot be deleted since it not exist: %s", 
+            					slimeWorld.getAbsoluteFile() ));
+            }
 
         }
         else {
