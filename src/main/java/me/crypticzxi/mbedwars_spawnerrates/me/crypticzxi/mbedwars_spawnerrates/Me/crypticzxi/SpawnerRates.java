@@ -15,7 +15,7 @@ public class SpawnerRates implements Listener {
     @EventHandler
     public void onRoundStartEvent(RoundStartEvent event) {
 
-        int PPT = event.getArena().getPlayersPerTeam();
+        int ppt = event.getArena().getPlayersPerTeam();
         int teams = event.getArena().getEnabledTeams().size();
 
         ConfigurationSection speedRates = MBedwars_SpawnerRates.plugin.getConfig().getConfigurationSection("spawner-rates");
@@ -34,17 +34,17 @@ public class SpawnerRates implements Listener {
 
             if (speedRate.contains("NoOfTeams")) { // is a special Gamemode.
                 int NoOfTeams = speedRate.getInt("NoOfTeams");
-                if (PPT == PlayersPerTeam & NoOfTeams == teams) {
+                if (ppt == PlayersPerTeam & NoOfTeams == teams) {
                     final_name = name;
                     final_rate = rate;
                 }
-            } else if (PPT == PlayersPerTeam) {
+            } else if (ppt == PlayersPerTeam) {
                 final_name = name;
                 final_rate = rate;
             }
         }
 
-        double modifier = PPT / 4D + final_rate; // solo=1, wingman=1.15, duos=1.25, trios=1.5, quads=1.75
+        double modifier = ppt / 4D + final_rate; // solo=1, wingman=1.15, duos=1.25, trios=1.5, quads=1.75
         for (Spawner spawner : arena.getSpawners()) {
             spawner.addDropDurationModifier(final_name, MBedwars_SpawnerRates.plugin, SpawnerDurationModifier.Operation.MULTIPLY, modifier);
         }
