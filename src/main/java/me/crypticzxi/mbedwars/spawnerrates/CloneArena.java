@@ -55,10 +55,6 @@ public class CloneArena implements Listener {
 
             File oldSlime = new File("plugins/MBedwars/data/arenablocks/" + arena.getName() + ".slime");
             File newSlime = new File("slime_worlds/" + newName + ".slime");
-
-            // Create directories if they do not exist:
-            oldSlime.mkdirs();
-            newSlime.mkdirs();
             
             if ( !oldSlime.exists() ) {
             	Bukkit.getLogger().severe(
