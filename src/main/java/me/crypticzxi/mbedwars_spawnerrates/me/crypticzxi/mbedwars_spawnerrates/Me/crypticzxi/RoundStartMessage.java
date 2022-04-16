@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 import java.util.Collection;
 import java.util.List;
 
-public class roundStartMessage implements Listener {
+public class RoundStartMessage implements Listener {
 
     @EventHandler
     public void onRoundStartEvent(RoundStartEvent event) {
