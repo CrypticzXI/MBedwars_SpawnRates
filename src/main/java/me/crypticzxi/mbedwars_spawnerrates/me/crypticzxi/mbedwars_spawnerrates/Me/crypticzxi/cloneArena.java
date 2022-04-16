@@ -101,7 +101,7 @@ public class cloneArena implements Listener {
                 new_arena.addAuthors(Arrays.asList(arena.getAuthors()));
                 new_arena.setMinPlayers(arena.getMinPlayers());
                 new_arena.setPlayersPerTeam(arena.getPlayersPerTeam());
-                new_arena.setIcon(arena.getIcon());
+                // new_arena.setIcon(arena.getIcon());
                 new_arena.setLobbyLocation(arena.getLobbyLocation());
                 arena.getEnabledTeams().forEach(t -> {
                     new_arena.setTeamEnabled(t, true);
@@ -119,6 +119,7 @@ public class cloneArena implements Listener {
                 }
 
                 new_arena.setStatus(ArenaStatus.LOBBY);
+                new_arena.save();
 
             } catch (ArenaBuildException arenaBuildException) {
                 arenaBuildException.printStackTrace();
