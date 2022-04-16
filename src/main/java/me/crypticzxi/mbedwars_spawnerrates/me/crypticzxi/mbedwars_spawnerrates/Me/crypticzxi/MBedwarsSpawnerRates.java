@@ -24,7 +24,7 @@ import me.crypticzxi.mbedwars_spawnerrates.me.crypticzxi.mbedwars_spawnerrates.M
 import java.io.File;
 import java.util.*;
 
-public final class MBedwars_SpawnerRates extends JavaPlugin {
+public final class MBedwarsSpawnerRates extends JavaPlugin {
 
     public static JavaPlugin plugin;
 
