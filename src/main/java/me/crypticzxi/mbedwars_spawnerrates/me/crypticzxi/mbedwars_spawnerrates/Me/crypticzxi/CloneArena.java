@@ -151,8 +151,8 @@ public class CloneArena implements Listener {
     public void onRoundEndEvent(RoundEndEvent event) {
 
         Arena arena = event.getArena();
-        String Name = arena.getName();
-        String[] parts = Name.split("-");
+        String name = arena.getName();
+        String[] parts = name.split("-");
         Integer num = Helper.get().parseInt(parts[parts.length - 1]); // Gets the Number of Arena. Pokemon-Solos-<1>
 
 
@@ -167,7 +167,7 @@ public class CloneArena implements Listener {
             Bukkit.unloadWorld(slime, false);
             Bukkit.getLogger().info("Unloaded Slimeworld.");
 
-            File slime_world = new File("slime_worlds/" + Name + ".slime");
+            File slime_world = new File("slime_worlds/" + name + ".slime");
             Bukkit.getLogger().info("Get the slimeworld file.");
 
             slime_world.delete();
