@@ -1,12 +1,20 @@
 package me.crypticzxi.mbedwars.spawnerrates;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Arrays;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+
 import com.grinderwolf.swm.api.SlimePlugin;
-import com.grinderwolf.swm.api.exceptions.CorruptedWorldException;
-import com.grinderwolf.swm.api.exceptions.NewerFormatException;
-import com.grinderwolf.swm.api.exceptions.UnknownWorldException;
-import com.grinderwolf.swm.api.exceptions.WorldInUseException;
 import com.grinderwolf.swm.api.world.SlimeWorld;
 import com.grinderwolf.swm.api.world.properties.SlimePropertyMap;
+
 import de.marcely.bedwars.api.BedwarsAPI;
 import de.marcely.bedwars.api.GameAPI;
 import de.marcely.bedwars.api.arena.Arena;
@@ -20,19 +28,6 @@ import de.marcely.bedwars.api.world.WorldStorage;
 import de.marcely.bedwars.api.world.hologram.HologramEntity;
 import de.marcely.bedwars.tools.Helper;
 import de.marcely.bedwars.tools.location.XYZ;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Array;
-import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 
 public class CloneArena implements Listener {
 

@@ -18,7 +18,7 @@ public class SpawnerRates implements Listener {
         int ppt = event.getArena().getPlayersPerTeam();
         int teams = event.getArena().getEnabledTeams().size();
 
-        ConfigurationSection speedRates = MBedwarsSpawnerRates.plugin.getConfig().getConfigurationSection("spawner-rates");
+        ConfigurationSection speedRates = MBedwarsSpawnerRates.getInstance().getConfig().getConfigurationSection("spawner-rates");
         Set<String> speedRateKeys = speedRates.getKeys(false);
 
         Arena arena = event.getArena();
@@ -46,7 +46,7 @@ public class SpawnerRates implements Listener {
 
         double modifier = ppt / 4D + finalRate; // solo=1, wingman=1.15, duos=1.25, trios=1.5, quads=1.75
         for (Spawner spawner : arena.getSpawners()) {
-            spawner.addDropDurationModifier(finalName, MBedwarsSpawnerRates.plugin, SpawnerDurationModifier.Operation.MULTIPLY, modifier);
+            spawner.addDropDurationModifier(finalName, MBedwarsSpawnerRates.getInstance(), SpawnerDurationModifier.Operation.MULTIPLY, modifier);
         }
     }
 
