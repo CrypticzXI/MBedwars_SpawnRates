@@ -27,26 +27,25 @@ bedwars-start-message:
 # Wingman must be called
 # name: "Wingman-Speed"
 spawner-rates:
-  Solos:
+  -
     name: "Solos-Speed"
     playersPerTeam: 1
     spawn-rate: 0.75
-  Duos:
+  -
     name: "Duos-Speed"
     playersPerTeam: 1
     spawn-rate: 1
-  Trios:
+  -
     name: "Trios-Speed"
     playersPerTeam: 1
     spawn-rate: 1.25
-  Quads:
+  -
     name: "Quads-Speed"
     playersPerTeam: 1
     spawn-rate: 1.5
-  Wingman:
+  -
     name: "Wingman-Speed"
     playersPerTeam: 2
-    NoOfTeams: 2   # Optional
     spawn-rate: 1.5
 
 
