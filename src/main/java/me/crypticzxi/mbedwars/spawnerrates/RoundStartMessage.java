@@ -14,7 +14,7 @@ public class RoundStartMessage implements Listener {
     @EventHandler
     public void onRoundStartEvent(RoundStartEvent event) {
 
-        FileConfiguration config = MBedwarsSpawnerRates.plugin.getConfig();
+        FileConfiguration config = MBedwarsSpawnerRates.getInstance().getConfig();
 
         List<String> lobbyMessage = config.getStringList("bedwars-start-message.lines");
 
