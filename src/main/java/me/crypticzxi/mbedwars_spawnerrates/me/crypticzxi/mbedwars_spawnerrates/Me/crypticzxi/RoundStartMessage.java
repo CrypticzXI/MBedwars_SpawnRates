@@ -14,11 +14,11 @@ public class RoundStartMessage implements Listener {
     @EventHandler
     public void onRoundStartEvent(RoundStartEvent event) {
 
-        FileConfiguration config = MBedwars_SpawnerRates.plugin.getConfig();
+        FileConfiguration config = MBedwarsSpawnerRates.plugin.getConfig();
 
-        List<String> lobby_message = config.getStringList("bedwars-start-message.lines");
+        List<String> lobbyMessage = config.getStringList("bedwars-start-message.lines");
 
-        for (String message : lobby_message) {
+        for (String message : lobbyMessage) {
             sendCenteredMessage(message, event.getArena().getPlayers());
         }
 

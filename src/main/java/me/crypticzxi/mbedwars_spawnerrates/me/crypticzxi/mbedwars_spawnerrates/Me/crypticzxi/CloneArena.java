@@ -48,17 +48,17 @@ public class CloneArena implements Listener {
 
         parts[parts.length - 1] = "" + (num++);
         newName = String.join("-", parts);
-        Arena check_arena = GameAPI.get().getArenaByExactName(newName);
+        Arena checkArena = GameAPI.get().getArenaByExactName(newName);
 
-        if (check_arena == null) {
+        if (checkArena == null) {
 
             // GREAT! We can create a new arena.
 
-            File old_slime = new File("plugins/MBedwars/data/arenablocks/" + arena.getName() + ".slime");
-            File new_slime = new File("slime_worlds/" + newName + ".slime");
+            File oldSlime = new File("plugins/MBedwars/data/arenablocks/" + arena.getName() + ".slime");
+            File newSlime = new File("slime_worlds/" + newName + ".slime");
 
             try {
-                Files.copy(old_slime.toPath(), new_slime.toPath());
+                Files.copy(oldSlime.toPath(), newSlime.toPath());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -69,7 +69,7 @@ public class CloneArena implements Listener {
             try {
                 slimeWorld = slimeAPI.loadWorld(
                         slimeAPI.getLoader("file"),
-                        new_slime.getName().replace(".slime", ""),
+                        newSlime.getName().replace(".slime", ""),
                         true,
                         new SlimePropertyMap());
             } catch (Exception e) {
@@ -80,45 +80,45 @@ public class CloneArena implements Listener {
             slimeAPI.generateWorld(slimeWorld);
 
 
-            World new_world = Bukkit.getWorld(newName);
+            World newWorld = Bukkit.getWorld(newName);
 
             World oldWorld = arena.getGameWorld();
-            WorldStorage newWs = BedwarsAPI.getWorldStorage(new_world);
+            WorldStorage newWs = BedwarsAPI.getWorldStorage(newWorld);
             WorldStorage oldWs = BedwarsAPI.getWorldStorage(oldWorld);
 
             for (HologramEntity holo : oldWs.getHolograms()) {
                 Location loc = holo.getLocation();
 
-                loc.setWorld(new_world);
+                loc.setWorld(newWorld);
                 newWs.spawnHologram(holo.getControllerType(), loc);
             }
 
             try {
-                Arena new_arena = GameAPI.get().createArena().setRegenerationType(RegenerationType.WORLD).setWorld(new_world).setName(newName).finish();
+                Arena newArena = GameAPI.get().createArena().setRegenerationType(RegenerationType.WORLD).setWorld(newWorld).setName(newName).finish();
 
-                new_arena.setCustomNameEnabled(true);
-                new_arena.setCustomName(arena.getDisplayName());
-                new_arena.addAuthors(Arrays.asList(arena.getAuthors()));
-                new_arena.setMinPlayers(arena.getMinPlayers());
-                new_arena.setPlayersPerTeam(arena.getPlayersPerTeam());
-                new_arena.setIcon(arena.getIcon());
-                new_arena.setLobbyLocation(arena.getLobbyLocation());
+                newArena.setCustomNameEnabled(true);
+                newArena.setCustomName(arena.getDisplayName());
+                newArena.addAuthors(Arrays.asList(arena.getAuthors()));
+                newArena.setMinPlayers(arena.getMinPlayers());
+                newArena.setPlayersPerTeam(arena.getPlayersPerTeam());
+                newArena.setIcon(arena.getIcon());
+                newArena.setLobbyLocation(arena.getLobbyLocation());
                 arena.getEnabledTeams().forEach(t -> {
-                    new_arena.setTeamEnabled(t, true);
-                    new_arena.setBedLocation(t, arena.getBedLocation(t));
-                    new_arena.setTeamSpawn(t, arena.getTeamSpawn(t));
+                    newArena.setTeamEnabled(t, true);
+                    newArena.setBedLocation(t, arena.getBedLocation(t));
+                    newArena.setTeamSpawn(t, arena.getTeamSpawn(t));
                 });
 
                 for (Spawner spawner : arena.getSpawners()) {
-                    new_arena.addSpawner(new XYZ(spawner.getLocation()), spawner.getDropType());
+                    newArena.addSpawner(new XYZ(spawner.getLocation()), spawner.getDropType());
                 }
 
-                if (!new_arena.getIssues().isEmpty()) {
+                if (!newArena.getIssues().isEmpty()) {
                     return; // we didn't set everything
 
                 }
 
-                new_arena.setStatus(ArenaStatus.LOBBY);
+                newArena.setStatus(ArenaStatus.LOBBY);
 
             } catch (ArenaBuildException arenaBuildException) {
                 arenaBuildException.printStackTrace();
@@ -146,9 +146,9 @@ public class CloneArena implements Listener {
 
             Bukkit.unloadWorld(slime, false);
 
-            File slime_world = new File("slime_worlds/" + name + ".slime");
+            File slimeWorld = new File("slime_worlds/" + name + ".slime");
 
-            slime_world.delete();
+            slimeWorld.delete();
 
         }
 
