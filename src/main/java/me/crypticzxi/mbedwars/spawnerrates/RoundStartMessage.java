@@ -1,4 +1,4 @@
-package me.crypticzxi.mbedwars_spawnerrates.me.crypticzxi.mbedwars_spawnerrates.Me.crypticzxi;
+package me.crypticzxi.mbedwars.spawnerrates;
 import de.marcely.bedwars.api.event.arena.RoundStartEvent;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
