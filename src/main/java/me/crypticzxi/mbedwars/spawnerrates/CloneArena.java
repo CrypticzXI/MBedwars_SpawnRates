@@ -3,6 +3,7 @@ package me.crypticzxi.mbedwars.spawnerrates;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 
 import org.bukkit.Bukkit;
@@ -20,6 +21,7 @@ import de.marcely.bedwars.api.GameAPI;
 import de.marcely.bedwars.api.arena.Arena;
 import de.marcely.bedwars.api.arena.ArenaStatus;
 import de.marcely.bedwars.api.arena.RegenerationType;
+import de.marcely.bedwars.api.event.arena.ArenaIssuesCheckEvent.Issue;
 import de.marcely.bedwars.api.event.arena.RoundEndEvent;
 import de.marcely.bedwars.api.event.arena.RoundStartEvent;
 import de.marcely.bedwars.api.exception.ArenaBuildException;
@@ -53,9 +55,37 @@ public class CloneArena implements Listener {
             File oldSlime = new File("plugins/MBedwars/data/arenablocks/" + arena.getName() + ".slime");
             File newSlime = new File("slime_worlds/" + newName + ".slime");
 
+            // Create directories if they do not exist:
+            oldSlime.mkdirs();
+            newSlime.mkdirs();
+            
+            if ( !oldSlime.exists() ) {
+            	MBedwarsSpawnerRates.getInstance().logSevere(
+            			String.format(
+            					"&4Error onRoundStartEvent: &3Slime world source does not exist: &7%s", 
+            					oldSlime.getAbsoluteFile() ));
+            	return;
+            }
+            
+            if ( newSlime.exists() ) {
+            	MBedwarsSpawnerRates.getInstance().logSevere(
+            			String.format(
+            					"&4Error onRoundStartEvent: &3Slime world destination already exists "
+            					+ "and will be replaced: &7%s", 
+            					newSlime.getAbsoluteFile() ));
+            	
+            }
+            
             try {
-                Files.copy(oldSlime.toPath(), newSlime.toPath());
+                Files.copy(oldSlime.toPath(), newSlime.toPath(), StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
+            	MBedwarsSpawnerRates.getInstance().logSevere(
+            			String.format(
+            					"&4Error onRoundStartEvent: &3Slime world copy failure. " +
+            					"Source: &7%s &3Target: &7%s  &3Error: &7[&4&7]",
+            							oldSlime.getAbsoluteFile(),
+            							newSlime.getAbsoluteFile(),
+            							e.getMessage() ));
                 e.printStackTrace();
             }
 
@@ -69,6 +99,12 @@ public class CloneArena implements Listener {
                         true,
                         new SlimePropertyMap());
             } catch (Exception e) {
+            	MBedwarsSpawnerRates.getInstance().logSevere(
+            			String.format(
+            					"&4Error onRoundStartEvent: &3Slime world load failure. " +
+            							"&3Slime world: &7%s  &3Error: &7[&4&7]",
+            							newSlime.getAbsoluteFile(),
+            							e.getMessage() ));
                 e.printStackTrace();
             }
 
@@ -110,8 +146,24 @@ public class CloneArena implements Listener {
                 }
 
                 if (!newArena.getIssues().isEmpty()) {
+                	
+                	MBedwarsSpawnerRates.getInstance().logSevere(
+                			String.format(
+                					"&4Error onRoundStartEvent: &3Slime world cloning failure. " +
+                							"&3Arena: &7%s",
+                							newArena.getName() ));
+                	
+                	for (Issue issue : newArena.getIssues() ) {
+                		MBedwarsSpawnerRates.getInstance().logSevere(
+                				String.format(
+                						"&4Error onRoundStartEvent: &3Issue Type: &7%s &3Detail: &7%s." +
+                								"&3Arena: &7%s",
+                								issue.getType(),
+                								issue.getDetail() ));
+                                                                                   		
+					}
+                	
                     return; // we didn't set everything
-
                 }
 
                 newArena.setStatus(ArenaStatus.LOBBY);
@@ -144,7 +196,21 @@ public class CloneArena implements Listener {
 
             File slimeWorld = new File("slime_worlds/" + name + ".slime");
 
-            slimeWorld.delete();
+            if ( slimeWorld.exists() ) {
+            	
+            	slimeWorld.delete();
+
+            	MBedwarsSpawnerRates.getInstance().logInfo(
+            			String.format(
+            					"&onRoundEndEvent: &3slimeWorld deleted: &7%s", 
+            					slimeWorld.getAbsoluteFile() ));
+            }
+            else {
+            	MBedwarsSpawnerRates.getInstance().logInfo(
+            			String.format(
+            					"&4Error onRoundEndEvent: &3slimeWorld cannot be deleted since it not exist: &7%s", 
+            					slimeWorld.getAbsoluteFile() ));
+            }
 
         }
 

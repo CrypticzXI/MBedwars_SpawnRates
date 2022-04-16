@@ -1,6 +1,8 @@
 package me.crypticzxi.mbedwars.spawnerrates;
 
-import org.bukkit.Bukkit;
+import java.util.logging.Level;
+
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -31,7 +33,7 @@ public final class MBedwarsSpawnerRates extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
-        Bukkit.getLogger().severe("Shitty Spawn Rates Plugin Has Loaded.");
+        logSevere("&4Shitty Spawn Rates Plugin Has Loaded.");
         getServer().getPluginManager().registerEvents(new RoundStartMessage(), this);
         getServer().getPluginManager().registerEvents(new SpawnerRates(), this);
         getServer().getPluginManager().registerEvents(new CloneArena(), this);
@@ -44,7 +46,7 @@ public final class MBedwarsSpawnerRates extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        Bukkit.getLogger().severe("Shitty Spawn Rates Plugin Has Gone To Bed.");
+        logSevere("&4Shitty Spawn Rates Plugin Has Gone To Bed.");
         saveConfig();
     }
 
@@ -56,11 +58,56 @@ public final class MBedwarsSpawnerRates extends JavaPlugin {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
                 reloadConfig();
-                player.sendMessage("Config Reloaded. GG!");
+                log(player, "&7Config Reloaded. &3GG!");
             }
 
             // If the player (or console) uses our command correct, we can return true
             return true;
         }
+    }
+    
+    private void log( Level logLevel, String message ) {
+    	message = ChatColor.translateAlternateColorCodes('&', message);
+    	
+    	getLogger().info(message);
+    }
+    
+    
+    /**
+     * <p>Log messages at info level. Translates '&' escape codes to the correct 
+     * color code symbol: '§'.
+     * </p>
+     * 
+     * @param message
+     */
+    public void logInfo( String message ) {
+    	log( Level.INFO, message );
+    }
+
+    /**
+     * <p>Log messages at warning level. Translates '&' escape codes to the correct 
+     * color code symbol: '§'.
+     * </p>
+     * 
+     * @param message
+     */
+    public void logWarn( String message ) {
+    	log( Level.WARNING, message );
+    }
+    
+    /**
+     * <p>Log messages at severe level. Translates '&' escape codes to the correct 
+     * color code symbol: '§'.
+     * </p>
+     * 
+     * @param message
+     */
+    public void logSevere( String message ) {
+    	log( Level.SEVERE, message );
+    }
+    
+    public void log( Player player, String message ) {
+    	message = ChatColor.translateAlternateColorCodes('&', message);
+    	player.sendMessage(message);
     }
 }
