@@ -46,6 +46,7 @@ spawner-rates:
   Wingman:
     name: "Wingman-Speed"
     playersPerTeam: 2
+    NoOfTeams: 2   # Optional
     spawn-rate: 1.5
 
 
