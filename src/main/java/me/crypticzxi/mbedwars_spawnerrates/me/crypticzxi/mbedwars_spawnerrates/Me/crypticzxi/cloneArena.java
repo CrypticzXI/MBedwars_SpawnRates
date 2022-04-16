@@ -28,6 +28,7 @@ import org.bukkit.event.Listener;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collection;
@@ -46,9 +47,11 @@ public class cloneArena implements Listener {
 
         // Example arena.getName(); == Pokemon-Solos-1, We need to change that to be Pokemon-Solos-2
 
-        parts[parts.length - 1] = "" + (num++);
+        parts[parts.length - 1] = "" + (++num);
         newName = String.join("-", parts);
         Arena check_arena = GameAPI.get().getArenaByExactName(newName);
+
+        Bukkit.getLogger().info("Set new arena name: " + newName + " Number ==== " + num);
 
         if (check_arena == null) {
 
@@ -56,6 +59,8 @@ public class cloneArena implements Listener {
 
             File old_slime = new File("plugins/MBedwars/data/arenablocks/" + arena.getName() + ".slime");
             File new_slime = new File("slime_worlds/" + newName + ".slime");
+
+            Bukkit.getLogger().info("copied files from arenablocks to SlimeWorldManager.");
 
             try {
                 Files.copy(old_slime.toPath(), new_slime.toPath());
@@ -72,8 +77,10 @@ public class cloneArena implements Listener {
                         new_slime.getName().replace(".slime", ""),
                         true,
                         new SlimePropertyMap());
+                Bukkit.getLogger().info("Loaded Slimeworld.");
             } catch (Exception e) {
                 e.printStackTrace();
+                Bukkit.getLogger().severe("COULD NOT LOAD SLIMEWORLD");
             }
 
             // generate it
@@ -91,10 +98,14 @@ public class cloneArena implements Listener {
 
                 loc.setWorld(new_world);
                 newWs.spawnHologram(holo.getControllerType(), loc);
+
             }
+            Bukkit.getLogger().info("Spawned Holograms in new arena.");
 
             try {
                 Arena new_arena = GameAPI.get().createArena().setRegenerationType(RegenerationType.WORLD).setWorld(new_world).setName(newName).finish();
+
+                Bukkit.getLogger().info("Creating new arena via MBedwars.");
 
                 new_arena.setCustomNameEnabled(true);
                 new_arena.setCustomName(arena.getDisplayName());
@@ -109,20 +120,26 @@ public class cloneArena implements Listener {
                     new_arena.setTeamSpawn(t, arena.getTeamSpawn(t));
                 });
 
+                Bukkit.getLogger().info("Added Details to Arena.");
+
                 for (Spawner spawner : arena.getSpawners()) {
                     new_arena.addSpawner(new XYZ(spawner.getLocation()), spawner.getDropType());
                 }
+                Bukkit.getLogger().info("Set Spawner Locations.");
 
                 if (!new_arena.getIssues().isEmpty()) {
+                    Bukkit.getLogger().severe("We didnt set everything on NewArena.");
                     return; // we didn't set everything
-
                 }
 
                 new_arena.setStatus(ArenaStatus.LOBBY);
+                Bukkit.getLogger().info("Set Arena Status to Lobby.");
                 new_arena.save();
+                Bukkit.getLogger().info("Saved Arena.");
 
             } catch (ArenaBuildException arenaBuildException) {
                 arenaBuildException.printStackTrace();
+                Bukkit.getLogger().severe("Something went extremely wrong.");
             }
 
         }
@@ -142,15 +159,23 @@ public class cloneArena implements Listener {
         if (num != null && num != 1) {
 
             arena.remove();
+            Bukkit.getLogger().info("Removed Arena.");
 
             World slime = arena.getGameWorld();
+            Bukkit.getLogger().info("Got the Slimeworld.");
 
             Bukkit.unloadWorld(slime, false);
+            Bukkit.getLogger().info("Unloaded Slimeworld.");
 
             File slime_world = new File("slime_worlds/" + Name + ".slime");
+            Bukkit.getLogger().info("Get the slimeworld file.");
 
             slime_world.delete();
+            Bukkit.getLogger().info("Deleted Slimeworld File.");
 
+        }
+        else {
+            Bukkit.getLogger().info("Cannot delete arena, Its the main Arena.");
         }
 
     }
