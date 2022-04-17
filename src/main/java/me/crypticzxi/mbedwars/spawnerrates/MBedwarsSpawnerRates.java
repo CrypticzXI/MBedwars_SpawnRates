@@ -11,19 +11,13 @@ public final class MBedwarsSpawnerRates extends JavaPlugin {
 
     private static MBedwarsSpawnerRates plugin;
     
-    private MBedwarsSpawnerRates() {
+    public MBedwarsSpawnerRates() {
     	super();
+    	
+    	plugin = this;
     }
 
     public static MBedwarsSpawnerRates getInstance() {
-    	if ( plugin == null ) {
-    		synchronized(MBedwarsSpawnerRates.class) {
-    			if ( plugin == null ) {
-    				plugin = new MBedwarsSpawnerRates();
-    			}
-    		}
-    	}
-    	
     	return plugin;
     }
     
