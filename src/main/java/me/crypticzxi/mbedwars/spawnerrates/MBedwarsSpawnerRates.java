@@ -27,7 +27,7 @@ public final class MBedwarsSpawnerRates extends JavaPlugin {
         Bukkit.getLogger().severe("Shitty Spawn Rates Plugin Has Loaded.");
         getServer().getPluginManager().registerEvents(new RoundStartMessage(), this);
         getServer().getPluginManager().registerEvents(new SpawnerRates(), this);
-        getServer().getPluginManager().registerEvents(new CloneArena(), this);
+        // getServer().getPluginManager().registerEvents(new CloneArena(), this);
         this.getCommand("spawnerrates").setExecutor(new ReloadCommand());
         plugin = this;
         saveConfig();

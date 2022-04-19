@@ -55,7 +55,7 @@ public class CloneArena implements Listener {
 
             // GREAT! We can create a new arena.
 
-            File oldSlime = new File("plugins/MBedwars/data/arenablocks/" + arena.getName() + ".slime");
+            File oldSlime = new File("slime_worlds/" + arena.getName() + ".slime");
             File newSlime = new File("slime_worlds/" + newName + ".slime");
             
             if ( !oldSlime.exists() ) {
