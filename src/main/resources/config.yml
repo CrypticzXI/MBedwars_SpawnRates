@@ -51,5 +51,10 @@ spawner-rates:
 
 
 
+arena:
+  roundEnd:
+    worldRemovalDelay: 600
+    
+    
 
 

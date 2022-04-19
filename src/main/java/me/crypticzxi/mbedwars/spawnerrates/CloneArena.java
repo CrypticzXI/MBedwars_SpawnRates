@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
 
-import com.grinderwolf.swm.api.exceptions.UnknownWorldException;
-import de.marcely.bedwars.api.world.hologram.HologramControllerType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -22,12 +20,13 @@ import de.marcely.bedwars.api.GameAPI;
 import de.marcely.bedwars.api.arena.Arena;
 import de.marcely.bedwars.api.arena.ArenaStatus;
 import de.marcely.bedwars.api.arena.RegenerationType;
+import de.marcely.bedwars.api.event.arena.ArenaIssuesCheckEvent.Issue;
 import de.marcely.bedwars.api.event.arena.RoundEndEvent;
 import de.marcely.bedwars.api.event.arena.RoundStartEvent;
-import de.marcely.bedwars.api.event.arena.ArenaIssuesCheckEvent.Issue;
 import de.marcely.bedwars.api.exception.ArenaBuildException;
 import de.marcely.bedwars.api.game.spawner.Spawner;
 import de.marcely.bedwars.api.world.WorldStorage;
+import de.marcely.bedwars.api.world.hologram.HologramControllerType;
 import de.marcely.bedwars.api.world.hologram.HologramEntity;
 import de.marcely.bedwars.tools.Helper;
 import de.marcely.bedwars.tools.location.XYZ;
@@ -206,48 +205,53 @@ public class CloneArena implements Listener {
         String[] parts = name.split("-");
         Integer num = Helper.get().parseInt(parts[parts.length - 1]); // Gets the Number of Arena. Pokemon-Solos-<1>
 
-        arena.remove();
-        Bukkit.getLogger().info("Removed Arena.");
-
-        SlimePlugin slimeAPI = (SlimePlugin) Bukkit.getPluginManager().getPlugin("SlimeWorldManager");
-
-        File newSlime = new File("slime_worlds/" + arena.getName() + ".slime");
-
-        SlimeWorld slimeWorld = null;
-
-        try {
-            slimeWorld = slimeAPI.loadWorld(
-                    slimeAPI.getLoader("file"),
-                    newSlime.getName().replace(".slime", ""),
-                    true,
-                    new SlimePropertyMap());
-            Bukkit.getLogger().info("Loaded Slimeworld.");
-        } catch (Exception e) {
-            Bukkit.getLogger().severe(
-                    String.format(
-                            "Error onRoundStartEvent: Slime world load failure. " +
-                                    "Slime world: %s  Error: [%s]",
-                            newSlime.getAbsoluteFile(),
-                            e.getMessage() ));
-            e.printStackTrace();
-        }
-
-        try {
-            slimeWorld.getLoader().deleteWorld("file");
-            Bukkit.getLogger().info("Slimeworld Deleted.");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Bukkit.getLogger().info("Slimeworld Failed to Delete.");
-        }
-
-
-
+        long removalDelay = MBedwarsSpawnerRates.getInstance().getConfig().getInt( 
+        				"arena.roundEnd.removalDelay", 30 * 20 ); // default 30 seconds
+        
+        Bukkit.getScheduler().runTaskLater( MBedwarsSpawnerRates.getInstance(), 
+    		new Runnable() {
+    			public void run() {
+    				
+    				arena.remove();
+    				Bukkit.getLogger().info("Removed Arena.");
+    				
+    				SlimePlugin slimeAPI = (SlimePlugin) Bukkit.getPluginManager().getPlugin("SlimeWorldManager");
+    				
+    				File newSlime = new File("slime_worlds/" + arena.getName() + ".slime");
+    				
+    				SlimeWorld slimeWorld = null;
+    				
+    				
+    				try {
+    					slimeWorld = slimeAPI.loadWorld(
+    							slimeAPI.getLoader("file"),
+    							newSlime.getName().replace(".slime", ""),
+    							true,
+    							new SlimePropertyMap());
+    					Bukkit.getLogger().info("Loaded Slimeworld.");
+    				} catch (Exception e) {
+    					Bukkit.getLogger().severe(
+    							String.format(
+    									"Error onRoundStartEvent: Slime world load failure. " +
+    											"Slime world: %s  Error: [%s]",
+    											newSlime.getAbsoluteFile(),
+    											e.getMessage() ));
+    					e.printStackTrace();
+    				}
+    				
+    				try {
+    					slimeWorld.getLoader().deleteWorld("file");
+    					Bukkit.getLogger().info("Slimeworld Deleted.");
+    				} catch (Exception e) {
+    					e.printStackTrace();
+    					Bukkit.getLogger().info("Slimeworld Failed to Delete.");
+    				}
+    				
+    			}
+    		}, removalDelay );
+        
 
     }
-
-
-
-
 
 
 
