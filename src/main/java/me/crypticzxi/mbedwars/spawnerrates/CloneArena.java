@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.util.Arrays;
 
 import com.grinderwolf.swm.api.exceptions.UnknownWorldException;
+import de.marcely.bedwars.api.world.hologram.HologramControllerType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -123,8 +124,16 @@ public class CloneArena implements Listener {
             for (HologramEntity holo : oldWs.getHolograms()) {
                 Location loc = holo.getLocation();
 
-                loc.setWorld(newWorld);
-                newWs.spawnHologram(holo.getControllerType(), loc);
+                if(holo.getControllerType() == HologramControllerType.DEALER) {
+
+                    loc.setWorld(newWorld);
+                    newWs.spawnHologram(holo.getControllerType(), loc);
+
+                }
+                else if (holo.getControllerType() == HologramControllerType.UPGRADE_DEALER) {
+                    loc.setWorld(newWorld);
+                    newWs.spawnHologram(holo.getControllerType(), loc);
+                }
 
             }
             Bukkit.getLogger().info("Spawned Holograms in new arena.");

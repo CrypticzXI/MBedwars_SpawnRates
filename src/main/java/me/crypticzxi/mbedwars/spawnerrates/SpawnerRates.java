@@ -4,6 +4,7 @@ import de.marcely.bedwars.api.arena.Arena;
 import de.marcely.bedwars.api.event.arena.RoundStartEvent;
 import de.marcely.bedwars.api.game.spawner.Spawner;
 import de.marcely.bedwars.api.game.spawner.SpawnerDurationModifier;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -48,6 +49,8 @@ public class SpawnerRates implements Listener {
         for (Spawner spawner : arena.getSpawners()) {
             spawner.addDropDurationModifier(finalName, MBedwarsSpawnerRates.getInstance(), SpawnerDurationModifier.Operation.MULTIPLY, modifier);
         }
+
+        Bukkit.getLogger().info("Set spawner rates for " + arena.getName() + " : " + finalName + "-" + finalRate);
     }
 
 
